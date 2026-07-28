@@ -26,6 +26,12 @@ class client(models.Model):
         comodel_name="ecommerce.cart", compute="_compute_cart_id", string="Active Cart"
     )
 
+    interaction_ids = fields.One2many(
+        comodel_name="ecommerce.interaction",
+        inverse_name="client_id",
+        string="Interactions / Activity Log",
+    )
+
     def _compute_cart_id(self):
         for client in self:
             # Look up the single cart linked to this client
