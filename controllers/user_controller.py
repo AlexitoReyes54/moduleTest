@@ -1,8 +1,7 @@
 import json
 from odoo import http
 
-
-class watchController(http.Controller):
+class getWatchController(http.Controller):
     @http.route("/api/watches", type="http", auth="public", methods=["GET"])
     def handler(self):
         items = http.request.env["product.watch"].sudo().search([])
