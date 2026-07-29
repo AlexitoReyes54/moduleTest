@@ -17,6 +17,7 @@
         # "views/interaction_views.xml",
         "views/watch_views.xml",
         "views/client_views.xml",
+        "views/interaction_views.xml",
     ],
     "installable": True,
     "application": True,

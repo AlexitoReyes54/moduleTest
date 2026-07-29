@@ -1,5 +1,6 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 access_ecommerce_client_user,access.ecommerce.client.user,model_ecommerce_client,base.group_user,1,1,1,1
 access_ecommerce_cart_user,access.ecommerce.cart.user,model_ecommerce_cart,base.group_user,1,1,1,1
+access_ecommerce_cart_item_user,access.ecommerce.cart.item.user,model_ecommerce_cart_item,base.group_user,1,1,1,1
 access_ecommerce_interaction_user,access.ecommerce.interaction.user,model_ecommerce_interaction,base.group_user,1,1,1,1
 access_product_watch_user,access.product.watch.user,model_product_watch,base.group_user,1,1,1,1

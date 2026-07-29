@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 1. Vista de Lista (list View) -->
+    <record id="view_ecommerce_interaction_list" model="ir.ui.view">
+        <field name="name">ecommerce.interaction.list</field>
+        <field name="model">ecommerce.interaction</field>
+        <field name="arch" type="xml">
+            <list string="Interacciones de Usuarios" create="true">
+                <field name="timestamp"/>
+                <field name="client_id"/>
+                <field name="event_type" widget="badge" 
+                       decoration-info="event_type == 'view_product'"
+                       decoration-success="event_type == 'add_to_cart'"
+                       decoration-warning="event_type == 'login'"/>
+                <field name="label"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 2. Vista de Formulario (Form View) -->
+    <record id="view_ecommerce_interaction_form" model="ir.ui.view">
+        <field name="name">ecommerce.interaction.form</field>
+        <field name="model">ecommerce.interaction</field>
+        <field name="arch" type="xml">
+            <form string="Detalle de Interacción" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group string="Información del Evento">
+                            <field name="timestamp"/>
+                            <field name="event_type"/>
+                            <field name="label"/>
+                        </group>
+                        <group string="Cliente">
+                            <field name="client_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 3. Acción de Ventana (Solo list y form) -->
+    <record id="action_ecommerce_interaction" model="ir.actions.act_window">
+        <field name="name">Logs de Interacciones</field>
+        <field name="res_model">ecommerce.interaction</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- 4. Menú -->
+    <menuitem id="menu_ecommerce_interaction"
+              name="Interacciones"
+              parent="menu_watch_root"
+              action="action_ecommerce_interaction"
+              sequence="2"/>
+
+</odoo>
