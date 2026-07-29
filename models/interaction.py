@@ -41,10 +41,6 @@ class EcommerceInteraction(models.Model):
 
     @api.model
     def track(self, client_id, event_type, label=None):
-        """
-        Helper method to quickly log an event from anywhere in Python.
-        Usage: self.env['ecommerce.interaction'].track(client.id, 'add_to_cart', label='PDP Button', product_id=prod.id)
-        """
         return self.create(
             {
                 "client_id": client_id,
