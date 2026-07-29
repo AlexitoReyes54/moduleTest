@@ -5,7 +5,7 @@
         <field name="name">ecommerce.client.list</field>
         <field name="model">ecommerce.client</field>
         <field name="arch" type="xml">
-            <list string="Clients">
+		<list string="Clients" create="false">
                 <field name="username"/>
                 <field name="email"/>
                 <field name="active" />

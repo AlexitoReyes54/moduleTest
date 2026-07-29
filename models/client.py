@@ -15,13 +15,10 @@ class client(models.Model):
     email = fields.Char(string="Email")
     active = fields.Boolean(default=True)
 
-    # Enforce uniqueness at the database level so credentials don't collide
     _sql_constraints = [
         ("username_unique", "unique(username)", "This username is already taken!")
     ]
 
-    # 1:1 Cart Relationship (Virtual reverse lookup)
-    # Since there's only 1 cart, limit=1 makes it behave like a single object instead of a list
     cart_id = fields.Many2one(
         comodel_name="ecommerce.cart", compute="_compute_cart_id", string="Active Cart"
     )
@@ -34,7 +31,6 @@ class client(models.Model):
 
     def _compute_cart_id(self):
         for client in self:
-            # Look up the single cart linked to this client
             client.cart_id = self.env["ecommerce.cart"].search(
                 [("client_id", "=", client.id)], limit=1
             )

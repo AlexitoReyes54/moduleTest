@@ -65,19 +65,9 @@
               sequence="10"/>
 
     <menuitem id="menu_watch_catalog" 
-              name="Catalog" 
-              parent="menu_watch_root" 
-              sequence="1"/>
-
-    <menuitem id="menu_product_watch" 
               name="Watches" 
-              parent="menu_watch_catalog" 
+              parent="menu_watch_root" 
               action="action_product_watch" 
               sequence="1"/>
 
-    <menuitem id="menu_product_reloj" 
-              name="Relojes" 
-              parent="menu_watch_catalog" 
-              action="action_product_watch" 
-              sequence="2"/>
 </odoo>

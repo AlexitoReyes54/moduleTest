@@ -25,13 +25,11 @@ class EcommerceInteraction(models.Model):
         index=True,
     )
 
-    # UI details: what element or label they interacted with
     label = fields.Char(
         string="Element / Label",
         help="Context on what was clicked (e.g., 'Hero CTA Banner', 'Buy Now Button')",
     )
 
-    # Automatic timestamping
     timestamp = fields.Datetime(
         string="Timestamp",
         default=fields.Datetime.now,
