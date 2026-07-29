@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ecommerce_client_list" model="ir.ui.view">
+        <field name="name">ecommerce.client.list</field>
+        <field name="model">ecommerce.client</field>
+        <field name="arch" type="xml">
+            <list string="Clients">
+                <field name="username"/>
+                <field name="email"/>
+                <field name="active" />
+                <!-- <field name="active" widget="boolean_toggle"/> -->
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ecommerce_client_form" model="ir.ui.view">
+        <field name="name">ecommerce.client.form</field>
+        <field name="model">ecommerce.client</field>
+        <field name="arch" type="xml">
+            <form string="Client">
+                <sheet>
+                    
+                    <div class="oe_title">
+                        <label for="username"/>
+                        <h1>
+                            <field name="username" placeholder="e.g. john_doe"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="email" widget="email"/>
+                        </group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Active Cart Tab -->
+                        <page string="Cart" name="cart">
+                            <group>
+                                <field name="cart_id" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Activity History Tab -->
+                        <page string="Activity Log" name="interactions">
+                            <field name="interaction_ids" readonly="1">
+                                <list default_order="timestamp desc">
+                                    <field name="timestamp"/>
+                                    <field name="event_type"/>
+                                    <field name="label"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ecommerce_client" model="ir.actions.act_window">
+        <field name="name">Clients</field>
+        <field name="res_model">ecommerce.client</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No clients found yet
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ecommerce_client"
+              name="Clients"
+              parent="menu_watch_root"
+              action="action_ecommerce_client"
+              sequence="2"/>
+
+</odoo>

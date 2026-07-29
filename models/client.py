@@ -51,3 +51,16 @@ class client(models.Model):
 
         client = self.search([("username", "=", username)], limit=1)
         return client if client else False
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        clients = super().create(vals_list)
+
+        for client in clients:
+            self.env["ecommerce.cart"].create(
+                {
+                    "client_id": client.id,
+                }
+            )
+
+        return clients
