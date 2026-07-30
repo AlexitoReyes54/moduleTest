@@ -5,11 +5,328 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>store</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+    crossorigin="anonymous">
 </head>
 
 <body>
+  <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+    <form class="container-fluid justify-content-between">
+      <h3 class="text-light">Watch store</h3>
+      <button class="btn btn-sm btn-outline-success" type="button"> Cart</button>
+    </form>
+  </nav>
+  <!-- Contenedor principal con márgenes laterales (px-3 px-md-5) -->
+  <div class="container-fluid px-3 px-md-5 my-5">
 
-  <h1>hola</h1>
+    <!-- continer dad -->
+    <div id="card-container" class="d-flex flex-wrap justify-content-center g-4">
+
+
+      <div id="card" class="col-12 col-md-6 col-lg-4 p-2" style="cursor: pointer;">
+        <div class="card h-100 text-center shadow-sm">
+          <img src="https://fastly.picsum.photos/id/3/5000/3333.jpg?hmac=GDjZ2uNWE3V59PkdDaOzTOuV3tPWWxJSf4fNcxu4S2g"
+            class="card-img-top" alt="Foto de Ana García">
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <h5 class="card-title m-0">Ana García</h5>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal -->
+
+  <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="modalItemTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="modalItemTitle">Detalles del Reloj</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row align-items-center g-4">
+            <!-- Imagen -->
+            <div class="col-12 col-md-5 text-center">
+              <img id="modalItemImage" src="" alt="Imagen del producto"
+                class="img-fluid rounded shadow-sm"
+                style="max-height: 300px; width: 100%; object-fit: cover;">
+            </div>
+            <!-- Información del Producto -->
+            <div class="col-12 col-md-7">
+              <span id="modalItemBrand"
+                class="badge bg-secondary mb-2 text-uppercase fs-6">Marca</span>
+              <h3 id="modalItemName" class="fw-bold mb-3">Nombre del producto
+              </h3>
+
+              <!-- Descripción -->
+              <div class="mt-3">
+                <h6 class="fw-bold text-muted small text-uppercase">
+                  Description</h6>
+                <p id="modalItemDescription"
+                  class="text-secondary mb-0">
+                  no description
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+            data-bs-dismiss="modal">Cerrar</button>
+          <!-- Botón Add to Cart agregado -->
+          <button type="button" class="btn btn-primary" onclick="addToCart()">
+            <i class="bi bi-cart-plus me-1"></i> Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- auth modal -->
+  <div class="modal fade" id="userAuthModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Welcome</h5>
+        </div>
+        <div class="modal-body">
+          <form id="userAuthForm">
+            <div class="mb-3">
+              <label for="usernameInput" class="form-label">Username</label>
+              <input type="text" class="form-control" id="usernameInput"
+                required placeholder="ej. juan_perez">
+            </div>
+            <div class="mb-3">
+              <label for="emailInput" class="form-label">email</label>
+              <input type="email" class="form-control" id="emailInput"
+                required placeholder="ej. juan@email.com">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">next</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- end of layout -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonyous"></script>
+  <script>
+    const base_url = 'http://127.0.0.1:8001';
+    const headers = {'Content-Type': 'application/json'};
+
+    // 1. Envía eventos usando el ID guardado en localStorage
+    async function sendEvent(event_type, label) {
+      const client_id = Number(localStorage.getItem('client_id'));
+      if (!client_id) return console.warn('Crea un usuario primero');
+      console.log(event_type + '  ' + label)
+
+      const res = await fetch(`${base_url}/api/interaction`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({client_id, event_type, label})
+      });
+      return res.json();
+    }
+
+
+    async function createUser(e) {
+      e?.preventDefault?.();
+
+      const body = JSON.stringify({
+        name: localStorage.getItem('username'),
+        email: localStorage.getItem('email'),
+      });
+
+      const res = await fetch(`${base_url}/api/client`, {method: 'POST', headers, body});
+      const user = await res.json();
+
+      if (user?.data.id) localStorage.setItem('client_id', user.data.id);
+      return user.data;
+    }
+
+    function addToCart() {
+      const rawSelectedItem = localStorage.getItem('selected_item');
+
+      if (!rawSelectedItem) {
+        console.warn('No hay ningún item seleccionado para agregar al carrito.');
+        return;
+      }
+
+      sendEvent("add_to_cart", JSON.parse(rawSelectedItem).display_name)
+
+      const modalElement = document.getElementById('itemModal');
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      if (modalInstance) {
+        modalInstance.hide();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkUserSession();
+    });
+
+    // 1. Verifica si existen los datos en localStorage; si no, abre el modal
+    function checkUserSession() {
+      const username = localStorage.getItem('username');
+      const email = localStorage.getItem('email');
+
+      if (!username || !email) {
+        const modalElement = document.getElementById('userAuthModal');
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modalInstance.show();
+      }
+    }
+
+    // 2. Event Listener para guardar en localStorage y enviar al "API"
+    document.getElementById('userAuthForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('usernameInput').value;
+      const email = document.getElementById('emailInput').value;
+
+      // Guardar en localStorage
+      localStorage.setItem('username', username);
+      localStorage.setItem('email', email);
+
+      // Enviar datos al Mock API
+      //await sendUserDataToApi({username, email});
+      await createUser(e)
+
+      // Cerrar el modal
+      const modalElement = document.getElementById('userAuthModal');
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      modalInstance.hide();
+    });
+
+    // 3. Función Mock de API
+    async function sendUserDataToApi(userData) {
+      console.log('Enviando datos al servidor...', userData);
+      // Simular retardo de red de 1 segundo
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log('✅ Respuesta de API (200 OK): Usuario guardado exitosamente');
+          resolve({status: 200, success: true});
+        }, 1000);
+      });
+    }
+
+    function renderCards(containerId = 'card-container') {
+      const container = document.getElementById(containerId);
+      if (!container) {
+        console.error(`No se encontró el contenedor con id "${containerId}"`);
+        return;
+      }
+
+      // 1. Obtener los items del localStorage
+      const rawItems = localStorage.getItem('cart_items');
+      if (!rawItems) {
+        container.innerHTML = '<p class="text-center text-muted">No hay elementos para mostrar.</p>';
+        return;
+      }
+
+      const items = JSON.parse(rawItems);
+
+      // 2. Mapear cada elemento al HTML requerido
+      container.innerHTML = items.map(item => `
+    <div 
+      class="col-12 col-md-6 col-lg-4 p-2" 
+      style="cursor: pointer;"
+      id="card"
+      onclick="selectItem(${item.id})"
+    >
+      <div class="card h-100 text-center shadow-sm">
+        <img 
+          src="${item.image || 'https://fastly.picsum.photos/id/3/5000/3333.jpg?hmac=GDjZ2uNWE3V59PkdDaOzTOuV3tPWWxJSf4fNcxu4S2g'}" 
+          class="card-img-top" 
+style="height: 220px; object-fit: cover;"
+          alt="${item.display_name}"
+        >
+        <div class="card-body d-flex align-items-center justify-content-center">
+          <h5 class="card-title m-0">${item.display_name}</h5>
+        </div>
+      </div>
+    </div>
+  `).join('');
+    }
+
+
+    function selectItem(id) {
+      const rawItems = localStorage.getItem('cart_items');
+
+      if (!rawItems) {
+        console.warn('No hay items en localStorage bajo "cart_items"');
+        return null;
+      }
+
+      const items = JSON.parse(rawItems);
+      const foundItem = items.find(item => item.id == id || item._id == id);
+      if (!foundItem) {
+        console.warn(`No se encontró ningún elemento con el id: ${id}`);
+        return null;
+      }
+
+      localStorage.setItem('selected_item', JSON.stringify(foundItem));
+      updateModalContent(foundItem)
+      opemModal()
+
+      return foundItem;
+    }
+
+    async function loadItems() {
+      try {
+        const response = await fetch(base_url + '/api/watches');
+
+        if (!response.ok) {
+          throw new Error(`Error en la petición: ${response.status}`);
+        }
+
+        const items = await response.json();
+        localStorage.setItem('cart_items', JSON.stringify(items.data));
+        console.log('Items guardados exitosamente en localStorage:', items);
+
+      } catch (error) {
+        console.error('Error al cargar los items:', error);
+      }
+    }
+
+    function updateModalContent(item) {
+      if (!item) return;
+
+      // Populating values into the modal DOM elements
+      document.getElementById('modalItemTitle').textContent = item.display_name || 'Item Details';
+      document.getElementById('modalItemName').textContent = item.display_name || 'N/A';
+      document.getElementById('modalItemBrand').textContent = item.brand || 'Watch';
+      //document.getElementById('modalItemId').textContent = `#${item.id}`;
+
+      // Insertar descripción (usa item.description o un texto por defecto)
+      const descriptionElement = document.getElementById('modalItemDescription');
+      descriptionElement.textContent = item.description || 'No hay una descripción disponible para este artículo.';
+
+      // Set image source (with fallback default image)
+      const defaultImg = 'https://fastly.picsum.photos/id/3/5000/3333.jpg?hmac=GDjZ2uNWE3V59PkdDaOzTOuV3tPWWxJSf4fNcxu4S2g';
+      document.getElementById('modalItemImage').src = item.image || defaultImg;
+      document.getElementById('modalItemImage').alt = item.display_name || 'Item Image';
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadItems()
+      renderCards()
+    });
+
+    function opemModal() {
+      const modalElement = document.getElementById('itemModal');
+      const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+      modalInstance.show();
+    }
+
+  </script>
 </body>
 
 </html>

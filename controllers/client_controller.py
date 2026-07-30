@@ -1,10 +1,17 @@
 import json
-from odoo import http
+from odoo import http, SUPERUSER_ID
 from odoo.http import request
 
 
 class RegisterUserController(http.Controller):
-    @http.route("/api/client", type="http", auth="public", methods=["POST"], csrf=False)
+    @http.route(
+        "/api/client",
+        type="http",
+        auth="none",
+        cors="*",
+        methods=["POST", "OPTIONS"],
+        csrf=False,
+    )
     def handler(self, **kwargs):
         data = kwargs
         if not data and request.httprequest.data:
@@ -47,8 +54,23 @@ class RegisterUserController(http.Controller):
             },
         }
 
+        lead_vals = {
+            "name": new_client.username,
+            "contact_name": new_client.username,
+            "email_from": new_client.email,
+            "phone": "000",
+            "description": "none",
+            "type": "lead",
+        }
+
+
         return request.make_response(
             json.dumps(response_payload),
-            headers=[("Content-Type", "application/json")],
-            status=201,
+            headers=[
+                ("Content-Type", "application/json"),
+                # ("Access-Control-Allow-Origin", "*"),
+            ],
         )
+
+    def _create_lead(request, name, email):
+        pass

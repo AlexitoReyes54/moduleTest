@@ -1,8 +1,16 @@
 import json
 from odoo import http
 
+
 class getWatchController(http.Controller):
-    @http.route("/api/watches", type="http", auth="public", methods=["GET"])
+    @http.route(
+        "/api/watches",
+        type="http",
+        auth="none",
+        methods=["GET", "OPTIONS"],
+        cors="*",
+        csrf=False,
+    )
     def handler(self):
         items = http.request.env["product.watch"].sudo().search([])
 
@@ -25,5 +33,9 @@ class getWatchController(http.Controller):
         }
 
         return http.request.make_response(
-            json.dumps(payload), headers=[("Content-Type", "application/json")]
+            json.dumps(payload),
+            headers=[
+                ("Content-Type", "application/json"),
+                #("Access-Control-Allow-Origin", "*"),
+            ],
         )

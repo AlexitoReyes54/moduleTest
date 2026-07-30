@@ -6,29 +6,51 @@ import type { Watch } from "./types";
 const watches: Watch[] = watchesData;
 
 const PORT = Number(process.env.PORT) || 8100;
+const corsHeaders = {
+	"Access-Control-Allow-Origin": "*", // Change to "http://localhost:3000" or similar to restrict
+	"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+	"Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
 Bun.serve({
 	port: PORT,
 	async fetch(req) {
 		const url = new URL(req.url);
 
-		// 1. Serve the HTML file
+		// 1. Handle preflight OPTIONS request
+		if (req.method === "OPTIONS") {
+			return new Response(null, {
+				status: 204,
+				headers: corsHeaders,
+			});
+		}
+
+		// Helper function to attach CORS headers to any Response
+		const withCors = (res: Response) => {
+			Object.entries(corsHeaders).forEach(([key, value]) => {
+				res.headers.set(key, value);
+			});
+			return res;
+		};
+
+		// 2. Serve the HTML file
 		if (url.pathname === "/") {
-			return new Response(file("index.html"));
+			return withCors(new Response(file("index.html")));
 		}
 
-		// 2. JSON Endpoint 1
+		// 3. JSON Endpoint 1
 		if (url.pathname === "/api/status" && req.method === "GET") {
-			return Response.json({ status: "running", code: 200 });
+			return withCors(Response.json({ status: "running", code: 200 }));
 		}
 
-		// 3. JSON Endpoint 2 - Serves the exact db.json array untouched
+		// 4. JSON Endpoint 2 - Serves the exact db.json array untouched
 		if (url.pathname === "/api/data" && req.method === "GET") {
-			return Response.json(watches);
+			return withCors(Response.json(watches));
 		}
 
 		// Fallback 404 for unknown routes
-		return new Response("Not Found", { status: 404 });
+		return withCors(new Response("Not Found", { status: 404 }));
+		
 	},
 });
 

@@ -38,14 +38,12 @@
                     </group>
 
                     <notebook>
-                        <!-- Active Cart Tab -->
                         <page string="Cart" name="cart">
                             <group>
                                 <field name="cart_id" readonly="1"/>
                             </group>
                         </page>
 
-                        <!-- Activity History Tab -->
                         <page string="Activity Log" name="interactions">
                             <field name="interaction_ids" readonly="1">
                                 <list default_order="timestamp desc">

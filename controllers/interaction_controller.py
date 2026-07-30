@@ -6,7 +6,8 @@ class InteractionController(http.Controller):
     ALLOWED_EVENT_TYPES = ["login", "view_product", "add_to_cart", "custom_click"]
 
     @http.route(
-        "/api/interaction", type="http", auth="public", methods=["POST"], csrf=False
+        "/api/interaction", type="http", auth="public", methods=["POST","OPTIONS"], csrf=False
+                ,cors="*"
     )
     def create_interaction(self, **kwargs):
         data = kwargs
